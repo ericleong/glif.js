@@ -1,11 +1,11 @@
 {
-  "name": "omggif",
-  "version": "1.0.5",
-  "author": "Dean McNamee <dean@gmail.com>",
-  "keywords": ["gif", "gif89a", "plask"],
+  "name": "glif",
+  "version": "1.0.6",
+  "author": "Eric Leong <eric@ericleong.me>",
+  "keywords": ["gif", "gif89a", "webgl"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/deanm/omggif"
+    "url": "https://github.com/ericleong/glif"
   },
-  "main": "omggif.js"
+  "main": "glif.js"
 }
