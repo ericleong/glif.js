@@ -633,6 +633,17 @@ function GifReader(buf) {
       --xleft;
     }
   };
+
+  // Let the GPU convert indices to rgb
+  this.decodeAndGLIF = function(frame_num, glif) {
+    var frame = this.frameInfo(frame_num);
+    var num_pixels = frame.width * frame.height;
+    var index_stream = new Uint8Array(num_pixels);  // At most 8-bit indices.
+    GifReaderLZWOutputIndexStream(
+        buf, frame.data_offset, index_stream, num_pixels);
+
+    glif.next(index_stream, frame.x, frame.y, frame.width, frame.height);
+  };
 }
 
 function GifReaderLZWOutputIndexStream(code_stream, p, output, output_length) {
