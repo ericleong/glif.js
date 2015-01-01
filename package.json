@@ -5,7 +5,7 @@
   "keywords": ["gif", "gif89a", "webgl"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ericleong/glif"
+    "url": "https://github.com/ericleong/glif.js"
   },
   "main": "glif.js"
 }
