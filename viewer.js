@@ -1,3 +1,4 @@
+/* global GifReader */
 function start() {
 	var canvases = document.getElementsByTagName('canvas'); 
 	for (var i = 0; i < canvases.length; i++) { 
