@@ -4,6 +4,8 @@
 // init
 //
 var GLIF = function(canvas) {
+	this.canvas = canvas;
+	
 	var gl = this.initWebGL(canvas);      // Initialize the GL context
 	
 	// Only continue if WebGL is available and working
@@ -108,9 +110,6 @@ GLIF.prototype.getFragmentShader = function() {
 
 //
 // getShader
-//
-// Loads a shader program by scouring the current document,
-// looking for a script with the specified ID.
 //
 GLIF.prototype.getShader = function(gl, source, type) {
 	// Now figure out what type of shader script we have,
@@ -234,14 +233,16 @@ GLIF.prototype.updateIndex = function(gl, texture, image, x, y, width, height) {
 	gl.texSubImage2D(gl.TEXTURE_2D, 0, x, y, width, height, gl.LUMINANCE, gl.UNSIGNED_BYTE, image);
 }
 
-GLIF.prototype.updatePalette = function(palette, size) {
+GLIF.prototype.updatePalette = function(palette) {
 	this.gl.bindTexture(this.gl.TEXTURE_2D, this.paletteTexture);
 	this.gl.pixelStorei(this.gl.UNPACK_ALIGNMENT, 4);
 	this.gl.pixelStorei(this.gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, this.gl.BROWSER_DEFAULT_WEBGL);
-	this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGB, size, 1, 0, this.gl.RGB, this.gl.UNSIGNED_BYTE, palette);
+	this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGB, 256, 1, 0, this.gl.RGB, this.gl.UNSIGNED_BYTE, palette);
 }
 
 GLIF.prototype.updateTransparency = function(transparent) {
+	this.transparent = transparent;
+
 	this.gl.useProgram(this.program);
 
 	if (transparent === null) {
@@ -252,8 +253,31 @@ GLIF.prototype.updateTransparency = function(transparent) {
 	}
 }
 
+//
+// clearTexture
+//
+// Clears the texture to the current transparent color.
+//
+GLIF.prototype.clearTexture = function() {
+	
+	var transparent = new Uint8Array(this.canvas.width * this.canvas.height);
+	for (var i = 0; i < transparent.length; i++){
+		transparent[i] = this.transparent;
+	}
+	
+	this.gl.bindTexture(this.gl.TEXTURE_2D, this.indexTexture);
+	this.gl.pixelStorei(this.gl.UNPACK_ALIGNMENT, 1);
+	this.gl.pixelStorei(this.gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, this.gl.NONE);
+	this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.LUMINANCE, this.canvas.width, this.canvas.height, 0, this.gl.LUMINANCE, this.gl.UNSIGNED_BYTE, transparent);
+}
+
+//
+// clear
+//
+// Clears the framebuffer.
+//
 GLIF.prototype.clear = function() {
-	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 }
 
@@ -262,7 +286,11 @@ GLIF.prototype.clear = function() {
 //
 // Advance the gif.
 //
-GLIF.prototype.next = function(index, x, y, width, height) {
+GLIF.prototype.next = function(index, x, y, width, height, disposal) {
+	
+	if (disposal == 2) { // clear to transparent
+		this.clearTexture();
+	}
 
 	this.updateIndex(this.gl, this.indexTexture, index, x, y, width, height);
 

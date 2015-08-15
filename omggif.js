@@ -637,12 +637,24 @@ function GifReader(buf) {
   // Let the GPU convert indices to rgb
   this.decodeAndGLIF = function(frame_num, glif) {
     var frame = this.frameInfo(frame_num);
+    
+    glif.updateTransparency(frame.transparent_index);
+    
+    var num_colors = num_global_colors;
+    if (frame.has_local_palette) {
+      num_colors = frame.data_offset - frame.palette_offset;
+    }
+    
+    var palette = new Uint8Array(3 * 256);
+    palette.set(buf.subarray(frame.palette_offset, frame.palette_offset + 3 * num_colors));
+    glif.updatePalette(palette);
+    
     var num_pixels = frame.width * frame.height;
     var index_stream = new Uint8Array(num_pixels);  // At most 8-bit indices.
     GifReaderLZWOutputIndexStream(
         buf, frame.data_offset, index_stream, num_pixels);
 
-    glif.next(index_stream, frame.x, frame.y, frame.width, frame.height);
+    glif.next(index_stream, frame.x, frame.y, frame.width, frame.height, frame.disposal);
   };
 }
 

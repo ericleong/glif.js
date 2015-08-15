@@ -9,7 +9,7 @@ var viewer = function(canvas, arrayBuffer, callback) {
 	canvas.height = info.height;
 
 	// uses glif.js
-	function gliffer(canvas, gr, byteArray, callback) {
+	function gliffer(canvas, gr, callback) {
 	
 		var glif = new GLIF(canvas);
 		
@@ -20,10 +20,7 @@ var viewer = function(canvas, arrayBuffer, callback) {
 	
 			frame_num = frame_num % gr.numFrames();
 			frame_info = gr.frameInfo(frame_num);
-	
-			glif.updateTransparency(frame_info.transparent_index);
-			glif.updatePalette(byteArray.subarray(frame_info.palette_offset, frame_info.palette_offset + 256 * 3), 256);
-	
+			
 			if (frame_num == 0) {
 				glif.clear();
 			}
@@ -54,6 +51,12 @@ var viewer = function(canvas, arrayBuffer, callback) {
 	
 			frame_num = frame_num % gr.numFrames();
 			frame_info = gr.frameInfo(frame_num);
+			
+			if (frame_info.disposal == 2) {
+				for (var i = 0; i < imagedata.data.length; i++) {
+					imagedata.data[i] = 0;
+				}
+			} 
 	
 			gr.decodeAndBlitFrameRGBA(frame_num, imagedata.data);
 	
@@ -72,7 +75,7 @@ var viewer = function(canvas, arrayBuffer, callback) {
 	}
 	
 	if (!info.interlaced) { // gpu is not suited for interlaced gifs
-		return gliffer(canvas, gr, byteArray, callback);
+		return gliffer(canvas, gr, callback);
 	} else {
 		return canvasser(canvas, gr, callback);
 	}
