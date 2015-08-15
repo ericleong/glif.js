@@ -2,6 +2,35 @@
 
 glif.js is a fork of [omggif](https://github.com/deanm/omggif) that speeds up gif decoding using WebGL.
 
+# usage
+
+## raw decoding
+
+```javascript
+var gr = new GifReader(byteArray);
+var glif = new GLIF(canvas);
+
+var info = gr.frameInfo(frame_num);
+	
+glif.updateTransparency(info.transparent_index);
+glif.updatePalette(byteArray.subarray(info.palette_offset, info.palette_offset + 256 * 3), 256);
+
+if (frame_num == 0) {
+	glif.clear();
+}
+
+gr.decodeAndGLIF(frame_num, glif);
+```
+
+## animating
+
+Use `viewer.js` to help animate the gif.
+
+```javascript
+var animate = viewer(canvas, arrayBuffer);
+animate();
+```
+
 # how
 
 GIF decoding is slow because LZW decompression must be performed serially. But the next step, mapping palette indices to RGB colors, is easily parallelizable by the GPU.
