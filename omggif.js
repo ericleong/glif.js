@@ -644,6 +644,7 @@ function GifReader(buf) {
     if (frame.has_local_palette) {
       num_colors = frame.data_offset - frame.palette_offset;
     }
+    num_colors = num_colors > 256 ? 256 : num_colors;
     
     var palette = new Uint8Array(3 * 256);
     palette.set(buf.subarray(frame.palette_offset, frame.palette_offset + 3 * num_colors));

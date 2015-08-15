@@ -288,7 +288,10 @@ GLIF.prototype.clear = function() {
 //
 GLIF.prototype.next = function(index, x, y, width, height, disposal) {
 	
-	if (disposal == 2) { // clear to transparent
+	if (disposal == 1) { // clear but draw over
+		this.clearTexture();
+	} else if (disposal == 2) { // clear to transparent
+		this.clear();
 		this.clearTexture();
 	}
 
