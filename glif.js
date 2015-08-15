@@ -3,7 +3,7 @@
 //
 // init
 //
-var GLIF = function(canvas, config) {
+var GLIF = function(canvas) {
 	var gl = this.initWebGL(canvas);      // Initialize the GL context
 	
 	// Only continue if WebGL is available and working
@@ -27,7 +27,7 @@ var GLIF = function(canvas, config) {
 
 		// Load and set up the textures we'll be using.
 
-		this.initTextures(canvas, config);
+		this.initTextures(canvas);
 	}
 }
 
