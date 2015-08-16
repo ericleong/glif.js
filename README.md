@@ -2,6 +2,13 @@
 
 glif.js is a fork of [omggif](https://github.com/deanm/omggif) that speeds up gif decoding using WebGL.
 
+# install
+
+For those using [bower](http://bower.io/)
+```bash
+$ bower install glif.js
+```
+
 # usage
 
 ## raw decoding
