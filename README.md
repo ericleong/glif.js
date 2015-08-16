@@ -22,12 +22,15 @@ gr.decodeAndGLIF(frame_num, glif);
 Use `viewer.js` to help animate the gif.
 
 ```javascript
-var animate = viewer(canvas, data);
-animate();
+var view = viewer(canvas, data, callback);
+var timeoutID = view(false);
 ```
 
 * `canvas` is a `HTMLCanvasElement` where the gif will be displayed.
 * `data` is one of `ArrayBuffer`, `Uint8Array`, or `GifReader` (from `omggif`).
+* `callback` is a function that is called after each frame is drawn. One parameter is passed - the `timeoutID` of the `setTimeout()` call. `clearTimeout(timeoutId)` will stop the animation.
+
+`viewer` returns a function (`view`) to draw the next frame of the gif. The function takes one argument, `once`. If `once` is true, then only one frame is drawn. The function returns the `timeoutID` of the _first_ frame.
 
 # how
 

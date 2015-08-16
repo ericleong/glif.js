@@ -23,7 +23,7 @@ var viewer = function(canvas, data, callback) {
 		var frame_num = 0;
 		var frame_info;
 	
-		return function draw() {
+		return function draw(once) {
 	
 			frame_num = frame_num % gr.numFrames();
 			frame_info = gr.frameInfo(frame_num);
@@ -35,13 +35,15 @@ var viewer = function(canvas, data, callback) {
 			gr.decodeAndGLIF(frame_num, glif);
 			frame_num++;
 			
-			var timeout = setTimeout(draw, frame_info.delay * 10);
+			if (!once) {
+				var timeout = setTimeout(draw, frame_info.delay * 10);
 	
-			if (typeof callback === 'function') {
-				callback(timeout);
+				if (typeof callback === 'function') {
+					callback(timeout);
+				}
+				
+				return timeout;
 			}
-			
-			return timeout;
 		}
 	}
 	
@@ -54,7 +56,7 @@ var viewer = function(canvas, data, callback) {
 		var frame_num = 0;
 		var frame_info;
 	
-		return function draw() {
+		return function draw(once) {
 	
 			frame_num = frame_num % gr.numFrames();
 			frame_info = gr.frameInfo(frame_num);
@@ -71,13 +73,15 @@ var viewer = function(canvas, data, callback) {
 	
 			frame_num++;
 	
-			var timeout = setTimeout(draw, frame_info.delay * 10);
+			if (!once) {
+				var timeout = setTimeout(draw, frame_info.delay * 10);
 			
-			if (typeof callback === 'function') {
-				callback(timeout);
+				if (typeof callback === 'function') {
+					callback(timeout);
+				}
+				
+				return timeout;
 			}
-			
-			return timeout;
 		}
 	}
 	
