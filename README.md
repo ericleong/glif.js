@@ -13,14 +13,21 @@ var glif = new GLIF(canvas);
 gr.decodeAndGLIF(frame_num, glif);
 ```
 
+* `byteArray` is a `Uint8Array` containing the data to be decoded.
+* `canvas` is a `HTMLCanvasElement` where the gif will be displayed.
+* `frame_num` is the frame to display
+
 ## animating
 
 Use `viewer.js` to help animate the gif.
 
 ```javascript
-var animate = viewer(canvas, arrayBuffer);
+var animate = viewer(canvas, data);
 animate();
 ```
+
+* `canvas` is a `HTMLCanvasElement` where the gif will be displayed.
+* `data` is one of `ArrayBuffer`, `Uint8Array`, or `GifReader` (from `omggif`).
 
 # how
 
@@ -28,7 +35,7 @@ GIF decoding is slow because LZW decompression must be performed serially. But t
 
 More specifically, it turns this slow `for` loop:
 
-```JavaScript
+```javascript
 for (var i = 0, il = index_stream.length; i < il; ++i) {
 	var index = index_stream[i];
 
@@ -54,7 +61,7 @@ for (var i = 0, il = index_stream.length; i < il; ++i) {
 
 into this fragment shader:
 
-```GLSL
+```glsl
 varying highp vec2 vTextureCoord;
 
 uniform sampler2D uIndexStream;

@@ -1,8 +1,15 @@
 /* global GifReader */
-var viewer = function(canvas, arrayBuffer, callback) {
-	var byteArray = new Uint8Array(arrayBuffer);
+var viewer = function(canvas, data, callback) {
 	
-	var gr = new GifReader(byteArray);
+	var gr;
+	
+	if (data instanceof ArrayBuffer) {
+		gr = new GifReader(new Uint8Array(data));
+	} else if (data instanceof Uint8Array) {
+		gr = new GifReader(data);
+	} else if (data instanceof GifReader) {
+		gr = data;
+	}
 	
 	var info = gr.frameInfo(0);
 	canvas.width = info.width;
