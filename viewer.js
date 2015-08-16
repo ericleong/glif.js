@@ -1,3 +1,4 @@
+/* global GLIF */
 /* global GifReader */
 var viewer = function(canvas, data, callback) {
 	
